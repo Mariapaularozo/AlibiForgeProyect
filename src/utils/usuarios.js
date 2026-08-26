@@ -1,8 +1,3 @@
-// ===== src/utils/usuarios.js =====
-// Estas funciones son CASI IDÉNTICAS a las que ya tenías en auth.js.
-// La lógica de localStorage no cambia con React, solo cambia CÓMO
-// las llamamos desde la interfaz (eso lo vemos en los componentes).
-
 export function obtenerUsuarios() {
     const datos = localStorage.getItem("usuarios");
     if (datos === null) {
