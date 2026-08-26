@@ -1,4 +1,3 @@
-// ===== src/pages/Perfil.jsx =====
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,15 +8,12 @@ function Perfil() {
     const [usuario, setUsuario] = useState(null);
     const navegar = useNavigate();
 
-    // useEffect ejecuta código automáticamente cuando el componente aparece
-    // en pantalla (algo que antes hacíamos con "el script se lee de arriba
-    // a abajo apenas carga la página"). El arreglo vacío [] al final significa
-    // "ejecútate solo UNA vez, cuando la página carga".
+    // Arreglo vacio para que se ejecute una sola vez 
     useEffect(function () {
         const aliasActual = localStorage.getItem("usuarioActual");
 
         if (!aliasActual) {
-            navegar("/"); // no hay sesión, mandamos al login
+            navegar("/"); // sin sesion mandamos al login
             return;
         }
 
@@ -34,8 +30,7 @@ function Perfil() {
         navegar("/");
     }
 
-    // Mientras no sepamos quién es el usuario, no mostramos nada todavía
-    // (esto evita errores de "usuario.alias" cuando usuario es null)
+   
     if (!usuario) {
         return null;
     }
@@ -50,10 +45,9 @@ function Perfil() {
                 <p><strong>Especialidad:</strong> {usuario.especialidad}</p>
                 <p><strong>Credibilidad:</strong> {usuario.credibilidad} puntos</p>
 
-                {/* Esto es un "if" dentro del JSX: solo se muestra si estaBloqueado es true */}
                 {estaBloqueado && (
                     <p className="bloqueado">
-                        🚫 No puedes crear coartadas hasta el{" "}
+                         No puedes crear coartadas hasta el{" "}
                         {new Date(usuario.bloqueadoHasta).toLocaleDateString()}
                     </p>
                 )}
