@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { obtenerCoartadas, guardarCoartadas } from "../utils/coartadas";
+import { obtenerCoartadas, guardarCoartadas, unirseComoTestigo, desertarDeLaCadena } from "../utils/coartadas";
 import TarjetaCoartada from "../components/TarjetaCoartada";
  
 function Coartadas() {
     const [coartadas, setCoartadas] = useState([]);
  
-    // Buscamos el usuario para cumplir la regla de solo 1 vez por coartada
+    //Buscamos el usuario para cumplir la regla de solo 1 vez por coartada
     const [aliasActual, setAliasActual] = useState(null);
  
     useEffect(function () {
@@ -13,7 +13,7 @@ function Coartadas() {
         setAliasActual(localStorage.getItem("usuarioActual"));
     }, []);
  
-
+    // "prestamos coartada guardada"
     function manejarVoto(idCoartada, voto) {
         const listaActual = obtenerCoartadas();
  
@@ -43,8 +43,19 @@ function Coartadas() {
  
         guardarCoartadas(listaActual);
  
-        // actualizar el estado de la lista
+  // actualizar el estado de la lista
         setCoartadas(listaActual);
+    }
+ 
+    // Unirse como testigo, revisamos duplicados y guardamos en LocalStorage
+    function manejarTestigo(idCoartada) {
+        const listaActualizada = unirseComoTestigo(obtenerCoartadas(), idCoartada, aliasActual);
+        setCoartadas([...listaActualizada]); // el "..." crea una copia nueva del arreglo
+    }
+ 
+    function manejarDesertar(idCoartada) {
+        const listaActualizada = desertarDeLaCadena(obtenerCoartadas(), idCoartada, aliasActual);
+        setCoartadas([...listaActualizada]);
     }
  
     return (
@@ -57,6 +68,8 @@ function Coartadas() {
                         key={coartada.id}
                         coartada={coartada}
                         onVotar={manejarVoto}
+                        onTestigo={manejarTestigo}
+                        onDesertar={manejarDesertar}
                     />
                 );
             })}

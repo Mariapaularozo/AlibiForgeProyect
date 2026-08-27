@@ -2,8 +2,8 @@ import { useState } from "react";
 import { calcularIndiceCredibilidad } from "../utils/coartadas";
  
 // "presta" coartadas 
-function TarjetaCoartada({ coartada, onVotar }) {
- 
+function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar }) {
+
     const [credibilidad, setCredibilidad] = useState(3);
     const [creatividad, setCreatividad] = useState(3);
     const [consistencia, setConsistencia] = useState(3);
@@ -64,6 +64,8 @@ function TarjetaCoartada({ coartada, onVotar }) {
                 </label>
  
                 <button onClick={manejarVotar}>Votar</button>
+                <button onClick={() => onTestigo(coartada.id)}>Ser testigo</button>
+                <button onClick={() => onDesertar(coartada.id)}>Desertar</button>
             </div>
         </div>
     );
