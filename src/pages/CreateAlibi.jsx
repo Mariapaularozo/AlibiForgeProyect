@@ -4,29 +4,23 @@ import { useState } from "react";
 function CreateAlibi() {
 
     //Estados
-
-    const [titulo, setTitulo] = useState("");
-    const [situacion, setSituacion] = useState("");
+     const [titulo, setTitulo] = useState("");
+    const [tags,setTags] = useState(tagsDefault);
+    const [nuevaTag, setNuevaTag] = useState("");
     const [historia, setHistoria] = useState("");
+   
+    function crearTag(){
+        const nuevaTags = createTag(tags, nuevaTag);
+        setTags(nuevaTags);
+        setNuevaTag("");
+    }
 
-    const [detalles, setDetalles] = useState([
-        "",
-        "",
-        ""
-    ]);
-
+    const [detalles, setDetalles] = useState(["","",""]);
     const [testigos, setTestigos] = useState([]);
-
     const [estado, setEstado] = useState("");
-
-    const [mensaje, setMensaje] = useState({
-        texto: "",
-        tipo: ""
-    });
-
+    const [mensaje, setMensaje] = useState({texto: "",tipo: "" });
 
     //Mockdata para usuario
-
     const usuarios = [
         { id: 1, alias: "ShadowHuntress" },
         { id: 2, alias: "TomatoSoup" },
@@ -35,162 +29,76 @@ function CreateAlibi() {
         { id: 5, alias: "404error" }
     ];
 
-
     //Detalles
-
     function agregarDetalle() {
-
-        setDetalles([
-            ...detalles,
-            ""
-        ]);
+        setDetalles([...detalles,""]);
     }
 
     function cambiarDetalle(index, valor) {
-
         const nuevosDetalles = [...detalles];
-
         nuevosDetalles[index] = valor;
-
         setDetalles(nuevosDetalles);
     }
 
-
     //Crear Alibi
-
     function crearAlibi(nuevoEstado) {
-
         const detallesLlenos = detalles
             .map((detalle) => detalle.trim())
             .filter((detalle) => detalle !== "");
 
-
-        // VALIDACIONES
-
+        //Validación
         if (!titulo || !situacion || !historia) {
-
-            mostrarMensaje(
-                "Por favor, completar todos los campos requeridos.",
-                "error"
-            );
-
+            mostrarMensaje("Por favor, completar todos los campos requeridos.", "error");
             return;
         }
 
-
         if (detallesLlenos.length < 3) {
-
             mostrarMensaje(
                 "La coartada debe tener al menos 3 detalles.",
                 "error"
             );
-
             return;
         }
 
-
-        // ESTADO
-
+        //Estado
         setEstado(nuevoEstado);
-
-
-        console.log({
-            titulo,
-            situacion,
-            historia,
-            detalles: detallesLlenos,
-            testigos,
-            estado: nuevoEstado
-        });
-
-
+        console.log({titulo, situacion, historia, detalles: detallesLlenos, testigos, estado: nuevoEstado});
+        
         if (nuevoEstado === "Draft") {
-
-            mostrarMensaje(
-                "Alibi guardado como borrador.",
-                "exito"
-            );
-
+            mostrarMensaje("Alibi guardado como borrador.", "exito");
         }
 
         if (nuevoEstado === "Submitted") {
-
-            mostrarMensaje(
-                "Alibi enviado a revisión.",
-                "exito"
-            );
-
-
-            setTimeout(() => {
-
-                setEstado("UnderReview");
-
-                mostrarMensaje(
-                    "🔍 Tu Alibi ahora está en revisión.",
-                    "revision"
-                );
-
+            mostrarMensaje("Alibi enviado a revisión.", "exito");
+            setTimeout(() => {setEstado("UnderReview");
+                mostrarMensaje("🔍 Tu Alibi ahora está en revisión.", "revision");
             }, 1500);
         }
     }
 
-
     //Testigo
-
     function agregarTestigo(idUsuario) {
-
         if (!testigos.includes(idUsuario)) {
-
-            setTestigos([
-                ...testigos,
-                idUsuario
-            ]);
-
-
-            const usuario = usuarios.find(
-                (usuario) => usuario.id === idUsuario
+            setTestigos([...testigos, idUsuario]);
+            const usuario = usuarios.find((usuario) => usuario.id === idUsuario
             );
-
-
-            mostrarMensaje(
-                `${usuario.alias} ahora apoya tu Alibi.`,
-                "exito"
-            );
-
+            
+            mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, exito");
         } else {
-
-            const usuario = usuarios.find(
-                (usuario) => usuario.id === idUsuario
-            );
-
-            mostrarMensaje(
-                `${usuario.alias} ya es testigo de esta coartada.`,
-                "error"
-            );
+            const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
+            mostrarMensaje(`${usuario.alias} ya es testigo de esta coartada.`, "error");
         }
     }
 
-
     //Mensajes
-
     function mostrarMensaje(texto, tipo) {
-
-        setMensaje({
-            texto,
-            tipo
-        });
-
-        setTimeout(() => {
-
-            setMensaje({
-                texto: "",
-                tipo: ""
-            });
-
+        setMensaje({texto, tipo});
+        setTimeout(() => {setMensaje({texto: "", tipo: ""});
         }, 3000);
     }
 
-    //Render 
+    /* ✧Estilo ✧*/
+    
     return ( 
     <main className="min-h-screen bg-[#ac97ff] px-5 py-10 font-sans text-[#21175c]"> 
     <div className="mx-auto max-w-3xl rounded-2xl bg-[#f5f2ff] p-6 shadow-xl sm:p-9"> 
