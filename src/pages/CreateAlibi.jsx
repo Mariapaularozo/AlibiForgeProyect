@@ -108,10 +108,11 @@ function CreateAlibi() {
           bg-white p-3 text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]" /> 
         
         {/* SITUACIÓN */}
-        <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]"> Situación objetivo </h2> 
-        <input type="text" value={situacion} onChange={(e) => setSituacion(e.target.value)}
-            placeholder="¿Para qué situación necesitas tu Alibi?" className="w-full rounded-lg border-2 border-[#8e7bdc]
-             bg-white p-3 text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]" /> 
+        <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]">Situación</h2>
+        <select value={situacion}onChange={(e) => setSituacion(e.target.value)} className="w-full rounded-lg border-2 border-[#8e7bdc] bg-white p-3 
+        text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]">
+        <option value="">Selecciona una situación</option>
+        {tags.map((tag) => (<option key={tag.Id} value={tag.Id}>{tag.nombre}</option>))}</select>
         
         {/* HISTORIA */} 
         <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]"> Historia </h2> 
