@@ -1,4 +1,7 @@
-body {
+@import "tailwindcss";
+
+/*Dejo esto en caso de que sea importante para la funcionalidad*/
+/*body {
     font-family: Arial, sans-serif;
     color: #222;
     margin: 0;
@@ -39,7 +42,7 @@ button {
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-}
+}*/
 
 .bloqueado {
     color: #c0392b;
