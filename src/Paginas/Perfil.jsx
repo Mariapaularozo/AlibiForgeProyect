@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { obtenerUsuarios } from "../utils/usuarios";
+import { obtenerUsuarios } from "../Almacenamiento/usuarios";
 
 function Perfil() {
     // Empezamos con "null" porque todavía no sabemos quién es el usuario

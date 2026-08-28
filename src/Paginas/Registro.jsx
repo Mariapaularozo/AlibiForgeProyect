@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { obtenerUsuarios, guardarUsuarios } from "../utils/usuarios";
+import { obtenerUsuarios, guardarUsuarios } from "../Almacenamiento/usuarios";
 
 function Registro() {
 

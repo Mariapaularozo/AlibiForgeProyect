@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { obtenerUsuarios } from "../utils/usuarios";
+import { obtenerUsuarios } from "../Almacenamiento/usuarios";
 
 function Login() {
     const [alias, setAlias] = useState("");

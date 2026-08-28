@@ -5,7 +5,7 @@ body {
 }
  
 header {
-    background-color: #6dbacd;
+    background-color: #74cadd;
     color: white;
     padding: 20px;
 }
@@ -34,7 +34,7 @@ form select {
 }
  
 button {
-    background-color: #6dbacd;
+    background-color: #74cadd;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -56,6 +56,11 @@ button {
  
 .tarjeta-coartada .indice {
     color: #8e44ad;
+}
+ 
+.aviso-expuesta {
+    color: #c0392b;
+    font-weight: bold;
 }
  
 .votar {

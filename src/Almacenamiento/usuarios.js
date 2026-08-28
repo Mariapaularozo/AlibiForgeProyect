@@ -2,8 +2,8 @@ import { useState } from "react";
 import { calcularIndiceCredibilidad } from "../utils/coartadas";
  
 // "presta" coartadas 
-function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar }) {
-
+function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar, onMarcarFalsa }) {
+ 
     const [credibilidad, setCredibilidad] = useState(3);
     const [creatividad, setCreatividad] = useState(3);
     const [consistencia, setConsistencia] = useState(3);
@@ -27,6 +27,14 @@ function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar }) {
             <p><strong>Autor:</strong> {coartada.autor}</p>
             <p><strong>Estado:</strong> {coartada.estado}</p>
             <p><strong>Testigos:</strong> {coartada.testigos.length}</p>
+ 
+    //solo si la coartada fue marcada falsa
+            {coartada.expuesta && (
+                <p className="aviso-expuesta">
+                    Esta coartada fue marcada como FALSA por la comunidad.
+                </p>
+            )}
+ 
             <p className="indice"><strong>Índice de Credibilidad: {indice}</strong></p>
  
             <div className="votar">
@@ -66,6 +74,7 @@ function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar }) {
                 <button onClick={manejarVotar}>Votar</button>
                 <button onClick={() => onTestigo(coartada.id)}>Ser testigo</button>
                 <button onClick={() => onDesertar(coartada.id)}>Desertar</button>
+                <button onClick={() => onMarcarFalsa(coartada.id)}>Marcar como falsa</button>
             </div>
         </div>
     );
