@@ -1,0 +1,365 @@
+import { useState } from "react";
+import "./index.css";
+
+function CreateAlibi() {
+
+    //Estados
+
+    const [titulo, setTitulo] = useState("");
+    const [situacion, setSituacion] = useState("");
+    const [historia, setHistoria] = useState("");
+
+    const [detalles, setDetalles] = useState([
+        "",
+        "",
+        ""
+    ]);
+
+    const [testigos, setTestigos] = useState([]);
+
+    const [estado, setEstado] = useState("");
+
+    const [mensaje, setMensaje] = useState({
+        texto: "",
+        tipo: ""
+    });
+
+
+    //Mockdata para usuario
+
+    const usuarios = [
+        { id: 1, alias: "ShadowHuntress" },
+        { id: 2, alias: "TomatoSoup" },
+        { id: 3, alias: "Urfear" },
+        { id: 4, alias: "Cowfarm" },
+        { id: 5, alias: "404error" }
+    ];
+
+
+    //Detalles
+
+    function agregarDetalle() {
+
+        setDetalles([
+            ...detalles,
+            ""
+        ]);
+    }
+
+    function cambiarDetalle(index, valor) {
+
+        const nuevosDetalles = [...detalles];
+
+        nuevosDetalles[index] = valor;
+
+        setDetalles(nuevosDetalles);
+    }
+
+
+    //Crear Alibi
+
+    function crearAlibi(nuevoEstado) {
+
+        const detallesLlenos = detalles
+            .map((detalle) => detalle.trim())
+            .filter((detalle) => detalle !== "");
+
+
+        // VALIDACIONES
+
+        if (!titulo || !situacion || !historia) {
+
+            mostrarMensaje(
+                "Por favor, completar todos los campos requeridos.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        if (detallesLlenos.length < 3) {
+
+            mostrarMensaje(
+                "La coartada debe tener al menos 3 detalles.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        // ESTADO
+
+        setEstado(nuevoEstado);
+
+
+        console.log({
+            titulo,
+            situacion,
+            historia,
+            detalles: detallesLlenos,
+            testigos,
+            estado: nuevoEstado
+        });
+
+
+        if (nuevoEstado === "Draft") {
+
+            mostrarMensaje(
+                "Alibi guardado como borrador.",
+                "exito"
+            );
+
+        }
+
+        if (nuevoEstado === "Submitted") {
+
+            mostrarMensaje(
+                "Alibi enviado a revisión.",
+                "exito"
+            );
+
+
+            setTimeout(() => {
+
+                setEstado("UnderReview");
+
+                mostrarMensaje(
+                    "🔍 Tu Alibi ahora está en revisión.",
+                    "revision"
+                );
+
+            }, 1500);
+        }
+    }
+
+
+    //Testigo
+
+    function agregarTestigo(idUsuario) {
+
+        if (!testigos.includes(idUsuario)) {
+
+            setTestigos([
+                ...testigos,
+                idUsuario
+            ]);
+
+
+            const usuario = usuarios.find(
+                (usuario) => usuario.id === idUsuario
+            );
+
+
+            mostrarMensaje(
+                `${usuario.alias} ahora apoya tu Alibi.`,
+                "exito"
+            );
+
+        } else {
+
+            const usuario = usuarios.find(
+                (usuario) => usuario.id === idUsuario
+            );
+
+            mostrarMensaje(
+                `${usuario.alias} ya es testigo de esta coartada.`,
+                "error"
+            );
+        }
+    }
+
+
+    //Mensajes
+
+    function mostrarMensaje(texto, tipo) {
+
+        setMensaje({
+            texto,
+            tipo
+        });
+
+        setTimeout(() => {
+
+            setMensaje({
+                texto: "",
+                tipo: ""
+            });
+
+        }, 3000);
+    }
+
+
+    //Render
+
+    return (
+
+        <main className="contenedor">
+
+            <h1>Crea tu Alibi</h1>
+
+
+            <h2>Título</h2>
+
+            <input
+                type="text"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                placeholder="Título de tu Alibi"
+            />
+
+
+            <h2>Situación objetiva</h2>
+
+            <input
+                type="text"
+                value={situacion}
+                onChange={(e) => setSituacion(e.target.value)}
+                placeholder="¿Para qué situación necesitas tu Alibi?"
+            />
+
+
+            <h2>Historia</h2>
+
+            <textarea
+                maxLength={500}
+                value={historia}
+                onChange={(e) => setHistoria(e.target.value)}
+                placeholder="Historia de tu Alibi. Máximo 500 caracteres"
+            />
+
+            <p>
+                {historia.length} / 500 caracteres
+            </p>
+
+
+            <h2>Detalles clave</h2>
+
+            <div id="listaDetalles">
+
+                {detalles.map((detalle, index) => (
+
+                    <input
+                        key={index}
+                        type="text"
+                        value={detalle}
+                        onChange={(e) =>
+                            cambiarDetalle(index, e.target.value)
+                        }
+                        placeholder={
+                            index < 3
+                                ? `Detalle ${index + 1}`
+                                : "Ingrese un detalle"
+                        }
+                    />
+
+                ))}
+
+            </div>
+
+
+            <button
+                className="botonSecundario"
+                onClick={agregarDetalle}
+            >
+                + Agregar detalle
+            </button>
+
+
+            <h2>Testigos</h2>
+
+            <div id="listaTestigos">
+
+                {usuarios.map((usuario) => (
+
+                    <button
+                        key={usuario.id}
+                        className="botonTestigo"
+                        onClick={() =>
+                            agregarTestigo(usuario.id)
+                        }
+                    >
+                        Apoyar como {usuario.alias}
+                    </button>
+
+                ))}
+
+            </div>
+
+
+            <h3>Alibi Chain</h3>
+
+            <p id="alibiChain">
+
+                {testigos.length === 0
+                    ? "Todavía no hay testigos que apoyen tu Alibi"
+                    : `Esta Alibi Chain tiene ${testigos.length} miembro(s).`
+                }
+
+            </p>
+
+
+            <ul>
+
+                {testigos.map((id) => {
+
+                    const usuario = usuarios.find(
+                        (usuario) => usuario.id === id
+                    );
+
+                    return (
+                        <li key={id}>
+                            {usuario.alias}
+                        </li>
+                    );
+
+                })}
+
+            </ul>
+
+
+            <div className="acciones">
+
+                <button
+                    className="botonPrincipal"
+                    onClick={() => crearAlibi("Draft")}
+                >
+                    Guardar borrador
+                </button>
+
+
+                <button
+                    className="botonPrincipal"
+                    onClick={() => crearAlibi("Submitted")}
+                >
+                    Enviar Alibi
+                </button>
+
+            </div>
+
+
+            {mensaje.texto && (
+
+                <div className={`mensaje ${mensaje.tipo}`}>
+
+                    {mensaje.texto}
+
+                </div>
+
+            )}
+
+
+            {estado && (
+
+                <p>
+                    Estado actual: <strong>{estado}</strong>
+                </p>
+
+            )}
+
+        </main>
+    );
+}
+
+export default CreateAlibi;
