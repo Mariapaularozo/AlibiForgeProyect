@@ -42,10 +42,8 @@ function CreateAlibi() {
 
     //Crear Alibi
     function crearAlibi(nuevoEstado) {
-        const detallesLlenos = detalles
-            .map((detalle) => detalle.trim())
-            .filter((detalle) => detalle !== "");
-
+        const detallesLlenos = detalles.map((detalle) => detalle.trim()).filter((detalle) => detalle !== "");
+        
         //Validación
         if (!titulo || !situacion || !historia) {
             mostrarMensaje("Por favor, completar todos los campos requeridos.", "error");
@@ -80,11 +78,10 @@ function CreateAlibi() {
     function agregarTestigo(idUsuario) {
         if (!testigos.includes(idUsuario)) {
             setTestigos([...testigos, idUsuario]);
-            const usuario = usuarios.find((usuario) => usuario.id === idUsuario
-            );
-            
-            mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, exito");
-        } else {
+            const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
+            mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, "exito");
+        } 
+        else {
             const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
             mostrarMensaje(`${usuario.alias} ya es testigo de esta coartada.`, "error");
         }
