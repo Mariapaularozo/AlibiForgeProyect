@@ -2,6 +2,8 @@
 
 **AlibiForge** Es una plataforma web interactiva construida con **React** y **Vite** diseñada para la creación colaborativa, validación y gestión de coartadas (*alibis*). El sistema cuenta con un modelo de reputación, sistema de testigos comunitarios (*Alibi Chain*), cálculo de credibilidad, penalizaciones por deserción y rankings globales.
 
+**✨Este proyecto fue hecho por:** Maria Paula y Sofía. :D 
+
 ---
 
 ## 🚀 Características Principales
@@ -26,6 +28,8 @@
   - *Most Wanted*: Usuarios con mayor número de coartadas generadas.
 
 ---
+###📎 Una pequeña nota: 
+El proyecto fue hecho por ramas y para ver toda su funcionalidad hay que revisar las ramas. ¡Echale un ojo! Cada una tiene partes importantes para AlibiForge. Muhcas gracias :)
 
 ## 📁 Estructura del Proyecto
 
