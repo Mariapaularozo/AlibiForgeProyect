@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { tagsDefault } from "./TagSystem";
-import {obtenerCoartadas, guardarCoartadas, unirseComoTestigo, desertarDeLaCadena} from "./coartadas";
+import {obtenerCoartadas, guardarCoartadas} from "./coartadas";
 
 function CreateAlibi() {
     //Estados
@@ -9,10 +9,8 @@ function CreateAlibi() {
     const [tags, setTags] = useState(tagsDefault);
     const [historia, setHistoria] = useState("");
     const [detalles, setDetalles] = useState(["","",""]);
-    const [testigos, setTestigos] = useState([]);
     const [estado, setEstado] = useState("");
     const [mensaje, setMensaje] = useState({texto: "",tipo: "" });
-    const [idCoartada, setIdCoartada] = useState(null);
 
     //Mockdata para usuario
     const usuarios = [
@@ -62,7 +60,7 @@ function CreateAlibi() {
             situacion: situacion,
             historia: historia,
             detalles: detallesLlenos,
-            testigos: testigos,
+            testigos: [],
             estado: nuevoEstado,
             autor: "ShadowHuntress",
             votos: [],
@@ -73,7 +71,6 @@ function CreateAlibi() {
         //Agregar la coartada creada
         coartadas.push(nuevaCoartda);
         guardarCoartadas(coartadas);
-        setIdCoartada(nuevaCoartda.id);
         setEstado(nuevoEstado);
         console.log("Coartada guardad:", nuevaCoartda)
 
@@ -90,56 +87,11 @@ function CreateAlibi() {
         }
     }
 
-    //Testigo
-    function agregarTestigo(idUsuario) {
-        const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
-
-        if (!testigos.includes(usuario.alias)) {
-            if(idCoartada === null){
-                setTestigos([...testigos, usuario.alias]);
-                mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, "exito");
-                return;
-            }
-
-            const coartadas = obtenerCoartadas();
-            const nuevaCoartdas = unirseComoTestigo(
-                coartadas,
-                idCoartada,
-                usuario.alias
-            );
-
-            guardarCoartadas(nuevaCoartdas);
-            setTestigos([...testigos, usuario.alias]);
-            mostrarMensaje(`${usuario.alias} ahora apoya a tu Alibi`, "exito");
-        }
-        else {
-            mostrarMensaje(`${usuario.alias} ya es testigo de esta coartada.`, "error");
-        }
-    }
-
     //Mensajes
     function mostrarMensaje(texto, tipo) {
         setMensaje({texto, tipo});
         setTimeout(() => {setMensaje({texto: "", tipo: ""});
         }, 3000);
-    }
-
-    function desertarTestigo(alias){
-        if(idCoartada === null){
-            setTestigos(testigos.filter((testigo) => testigo !== alias));
-            return;
-        }
-
-        const coartadas = obtenerCoartadas();
-        const nuevasCoartadas = desertarDeLaCadena(
-            coartadas,
-            idCoartada,
-            alias
-        );
-
-        guardarCoartadas(nuevasCoartadas);
-        setTestigos(testigos.filter((testigo) => testigo !== alias));
-        mostrarMensaje(`${alias} abadonó la Alibi Chain`, "error");
     }
 
     /*✧Estilo ✧*/
@@ -155,13 +107,13 @@ function CreateAlibi() {
         
         {/* TÍTULO */} 
         <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]"> Título </h2>
-        <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)}
-          placeholder="Título de tu Alibi" className="w-full rounded-lg border-2 border-[#8e7bdc] 
+        <input type="text" value={titulo} onChange={(e) => setTitulo(e.target.value)}  
+          placeholder="Título de tu Alibi" className="w-full rounded-lg border-2 border-[#8e7bdc]  
           bg-white p-3 text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]" /> 
         
         {/* SITUACIÓN */}
         <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]">Situación</h2>
-        <select value={situacion}onChange={(e) => setSituacion(e.target.value)} className="w-full rounded-lg border-2 border-[#8e7bdc] bg-white p-3 
+        <select value={situacion}onChange={(e) => setSituacion(e.target.value)} className="w-full rounded-lg border-2 border-[#8e7bdc] bg-white p-3  
         text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]">
         <option value="">Selecciona una situación</option>
         {tags.map((tag) => (<option key={tag.Id} value={tag.Id}>{tag.nombre}</option>))}</select>
@@ -169,7 +121,7 @@ function CreateAlibi() {
         {/* HISTORIA */} 
         <h2 className="mb-2 mt-6 text-xl font-semibold text-[#37288a]"> Historia </h2> 
         <textarea maxLength={500} value={historia} onChange={(e) => setHistoria(e.target.value)}
-            placeholder="Historia de tu Alibi. Máximo 500 caracteres" className="min-h-32 w-full resize-y rounded-lg border-2 border-[#8e7bdc] 
+            placeholder="Historia de tu Alibi. Máximo 500 caracteres" className="min-h-32 w-full resize-y rounded-lg border-2 border-[#8e7bdc]  
             bg-white p-3 text-[#21175c] outline-none transition focus:border-[#0d0074] focus:ring-2 focus:ring-[#c9c0ff]" />
         <p className="mt-1 text-right text-sm text-gray-500"> {historia.length} / 500 caracteres </p> 
         
@@ -183,34 +135,20 @@ function CreateAlibi() {
         <button type="button" onClick={agregarDetalle} className="mt-4 rounded-lg bg-[#ded6ff] px-5 py-3 font-bold text-[#21175c] transition 
             hover:-translate-y-0.5 hover:bg-[#ccc1ff] active:translate-y-0" > + Agregar detalle </button> 
         
-        {/* TESTIGOS */} 
-        <h2 className="mb-3 mt-8 text-xl font-semibold text-[#37288a]"> Testigos </h2> 
-        <div className="flex flex-wrap gap-2"> {testigos.map((alias) => ( <li key={alias} className="flex items-center justify-between"> <span>{alias}</span> 
-        <button type="button" onClick={() => desertarTestigo(alias)} className="ml-3 rounded-lg bg-red-100 px-3 
-        py-1 text-sm font-semibold text-red-700 hover:bg-red-200">Desertar</button></li>))} </div> 
-        
-        {/* ALIBI CHAIN */}
-        <h3 className="mb-2 mt-8 text-lg font-semibold text-[#5c4bb7]"> Alibi Chain </h3> <p className="rounded-lg bg-[#e8e2ff] p-3"> 
-            {testigos.length === 0 ? "Todavía no hay testigos que apoyen tu Alibi." : `Esta Alibi Chain tiene ${testigos.length} miembro(s).` } </p>
-                    
-        {/* TESTIGOS ACTUALES */} 
-        {testigos.length > 0 && ( <div className="mt-3 rounded-lg bg-white p-4 shadow-sm"> 
-        <p className="mb-2 font-semibold text-[#37288a]"> Testigos actuales: </p> 
-        <ul className="list-disc pl-5 text-[#21175c]"> {testigos.map((alias) =>( <li key={alias}>{alias}</li> ))} </ul> </div> )} 
-                            
         {/* BOTONES */} 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row"> 
-        <button type="button" onClick={() => crearAlibi("Draft")} 
+        <button type="button" onClick={() => crearAlibi("Draft")}
         className="rounded-lg bg-[#0d0074] px-[18px] py-[11px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#1600a0] active:translate-y-0" > 
         Guardar borrador </button> <button type="button" onClick={() => crearAlibi("Submitted")} className="rounded-lg bg-[#0d0074] px-[18px] py-[11px] font-bold 
         text-white transition hover:-translate-y-0.5 hover:bg-[#1600a0] active:translate-y-0" > Enviar Alibi </button> </div> 
                                       
         {/* MENSAJES */} 
-        {mensaje.texto && ( <div className={`mt-5 rounded-lg p-3 font-bold ${ estilosMensaje[mensaje.tipo] }`} > 
+        {mensaje.texto && ( <div className={`mt-5 rounded-lg p-3 font-bold ${ estilosMensaje[mensaje.tipo] }`} >
              {mensaje.texto} </div> )} 
         {/* ESTADO */} 
-        {estado && ( <div className="mt-5 rounded-lg bg-white p-3 shadow-sm"> Estado actual: {" "} 
+        {estado && ( <div className="mt-5 rounded-lg bg-white p-3 shadow-sm"> Estado actual: {" "}
         <strong className="text-[#0d0074]"> {estado} </strong> </div> )} </div> </main> ); 
 }
     
 export default CreateAlibi;
+
