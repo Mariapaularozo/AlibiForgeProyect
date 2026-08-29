@@ -29,7 +29,7 @@
 
 ---
 ### 📎 Una pequeña nota: 
-El proyecto fue hecho por ramas y para ver toda su funcionalidad hay que revisar las ramas. ¡Echale un ojo! Cada una tiene partes importantes para AlibiForge. Muhcas gracias :)
+El proyecto fue hecho por ramas y para ver toda su funcionalidad hay que revisar las ramas. ¡Echale un ojo! Cada una tiene partes importantes para AlibiForge. Muchas gracias. :)
 
 ## 📁 Estructura del Proyecto
 
