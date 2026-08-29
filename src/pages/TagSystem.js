@@ -1,19 +1,15 @@
-import { useState } from "react";
-
-class Tag{
+class Tag {
     static Id = 0;
-    constructor(nombre){  
-        //Incrementa el Id para que cada uno sea unico :D
+    constructor(nombre) {  
         Tag.Id++;
         this.Id = Tag.Id;
         this.nombre = nombre;
     }
 }
 
-const tagsDefault =[
-     //Hay que agregarle Id
+export const tagsDefault = [
     new Tag("Llegue tarde a un parcial"),
-    new Tag("Llegue tarde a un final") ,
+    new Tag("Llegue tarde a un final"),
     new Tag("Llegue tarde a un quiz"),
     new Tag("Llegue tarde a clase"),
     new Tag("Entregue un proyecto tarde"),
@@ -23,18 +19,13 @@ const tagsDefault =[
     new Tag("No fui a una reunion")
 ];
 
-
-
-function createTag(tags, tag){
-    // Revisemos que la tag no exista
+export function createTag(tags, tag) {
     const existe = tags.some((tagExistente) => tagExistente.nombre.toLowerCase() === tag.trim().toLowerCase());
 
-    if(tag && tag.trim() !=="" && !existe){
-        //Hay que hacer tipo un constructor de tag para asignarle Id tambien
+    if (tag && tag.trim() !== "" && !existe) {
         const nuevoTag = new Tag(tag.trim());
         return [...tags, nuevoTag];
-    } 
-    else{
+    } else {
         return tags;
     }
 }

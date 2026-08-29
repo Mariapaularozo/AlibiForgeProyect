@@ -1,8 +1,8 @@
-//¡¡Aqui quitas los /**/ de comentario para funcionalidad total del codigo!!
+//¡¡Aqui quitas los comentario para funcionalidad total del codigo!!
 
-/*// Para leer y guardar coartadas
+// Para leer y guardar coartadas
 //Usa el mismo Localstorage de la parte B de sofi
- import { modificarCredibilidad } from "./usuarios";
+ import { modificarCredibilidad } from "../utils/usuarios";
  
 export function obtenerCoartadas() {
     const datos = localStorage.getItem("coartadas");
@@ -144,4 +144,4 @@ export function marcarComoFalsa(coartadas, idCoartada, alias) {
  
     guardarCoartadas(coartadas);
     return coartadas;
-}*/
+}

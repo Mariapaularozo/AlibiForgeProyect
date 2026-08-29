@@ -1,8 +1,8 @@
-//¡Eliminar /**/ para funcionalidad del codigo!
-/*import { useState } from "react";
+// ¡Eliminar comentarios para funcionalidad del codigo!
+import { useState } from "react";
 import { calcularIndiceCredibilidad } from "./coartadas";
  
-// "presta" coartadas 
+// "presta" coartadas
 function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar, onMarcarFalsa }) {
  
     const [credibilidad, setCredibilidad] = useState(3);
@@ -29,7 +29,7 @@ function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar, onMarcarFal
             <p><strong>Estado:</strong> {coartada.estado}</p>
             <p><strong>Testigos:</strong> {coartada.testigos.length}</p>
  
-    //solo si la coartada fue marcada falsa
+            {/* solo si la coartada fue marcada falsa */}
             {coartada.expuesta && (
                 <p className="aviso-expuesta">
                     Esta coartada fue marcada como FALSA por la comunidad.
@@ -79,12 +79,11 @@ function TarjetaCoartada({ coartada, onVotar, onTestigo, onDesertar, onMarcarFal
             </div>
         </div>
     );
-
 }
  
 export default TarjetaCoartada;
-// Agrega esta función en usuarios.jsx
+
 export function modificarCredibilidad(alias, puntos) {
-    // Lógica para actualizar la credibilidad del usuario (puedes adaptarla a tu estado/localStorage)
+    // Lógica para actualizar la credibilidad del usuario
     console.log(`Credibilidad de ${alias} modificada en ${puntos} puntos.`);
-}*/
+}

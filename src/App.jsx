@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
 import Perfil from "./pages/Perfil";
-import CreateAlibi from "./createAlibi.jsx";
+import CreateAlibi from "./pages/createAlibi.jsx";
 
 function App() {
     return (

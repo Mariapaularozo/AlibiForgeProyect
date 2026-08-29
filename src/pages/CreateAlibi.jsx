@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { tagsDefault } from "./TagSystem";
-import {obtenerCoartadas, guardarCoartadas} from "./coartadas";
+import { obtenerCoartadas, guardarCoartadas } from "./coartadas";
 
 //Mini nota: hay algunas cosas que dependen de codigo de la otra rama (usuario y coartadas) no estan juntas por comodidad al hacer codigo pero si deseas que funcione quita los comentarios en estas :D
 
