@@ -1,4 +1,4 @@
-readme_content = """# 🔮 AlibiForge
+# 🔮 AlibiForge
 
 **AlibiForge** Es una plataforma web interactiva construida con **React** y **Vite** diseñada para la creación colaborativa, validación y gestión de coartadas (*alibis*). El sistema cuenta con un modelo de reputación, sistema de testigos comunitarios (*Alibi Chain*), cálculo de credibilidad, penalizaciones por deserción y rankings globales.
 
