@@ -1,24 +1,18 @@
 import { useState } from "react";
-
+import { tagsDefault } from "./TagSystem";
+import {obtenerCoartadas, guardarCoartadas, unirseComoTestigo, desertarDeLaCadena} from "./coartadas";
 
 function CreateAlibi() {
-
     //Estados
-     const [titulo, setTitulo] = useState("");
-    const [tags,setTags] = useState(tagsDefault);
-    const [nuevaTag, setNuevaTag] = useState("");
+    const [titulo, setTitulo] = useState("");
+    const [situacion, setSituacion] = useState("");
+    const [tags, setTags] = useState(tagsDefault);
     const [historia, setHistoria] = useState("");
-   
-    function crearTag(){
-        const nuevaTags = createTag(tags, nuevaTag);
-        setTags(nuevaTags);
-        setNuevaTag("");
-    }
-
     const [detalles, setDetalles] = useState(["","",""]);
     const [testigos, setTestigos] = useState([]);
     const [estado, setEstado] = useState("");
     const [mensaje, setMensaje] = useState({texto: "",tipo: "" });
+    const [idCoartada, setIdCoartada] = useState(null);
 
     //Mockdata para usuario
     const usuarios = [
@@ -43,7 +37,8 @@ function CreateAlibi() {
     //Crear Alibi
     function crearAlibi(nuevoEstado) {
         const detallesLlenos = detalles.map((detalle) => detalle.trim()).filter((detalle) => detalle !== "");
-        
+
+
         //Validación
         if (!titulo || !situacion || !historia) {
             mostrarMensaje("Por favor, completar todos los campos requeridos.", "error");
@@ -58,10 +53,31 @@ function CreateAlibi() {
             return;
         }
 
-        //Estado
+        //Coartadas
+        const coartadas = obtenerCoartadas();
+
+        const nuevaCoartda = {
+            id: Date.now(),
+            titulo: titulo,
+            situacion: situacion,
+            historia: historia,
+            detalles: detallesLlenos,
+            testigos: testigos,
+            estado: nuevoEstado,
+            autor: "ShadowHuntress",
+            votos: [],
+            marcasFalsas: [],
+            expuesta: false
+        };
+
+        //Agregar la coartada creada
+        coartadas.push(nuevaCoartda);
+        guardarCoartadas(coartadas);
+        setIdCoartada(nuevaCoartda.id);
         setEstado(nuevoEstado);
-        console.log({titulo, situacion, historia, detalles: detallesLlenos, testigos, estado: nuevoEstado});
-        
+        console.log("Coartada guardad:", nuevaCoartda)
+
+        //Estado
         if (nuevoEstado === "Draft") {
             mostrarMensaje("Alibi guardado como borrador.", "exito");
         }
@@ -70,19 +86,33 @@ function CreateAlibi() {
             mostrarMensaje("Alibi enviado a revisión.", "exito");
             setTimeout(() => {setEstado("UnderReview");
                 mostrarMensaje("🔍 Tu Alibi ahora está en revisión.", "revision");
-            }, 1500);
+            }, 3000);
         }
     }
 
     //Testigo
     function agregarTestigo(idUsuario) {
-        if (!testigos.includes(idUsuario)) {
-            setTestigos([...testigos, idUsuario]);
-            const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
-            mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, "exito");
-        } 
+        const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
+
+        if (!testigos.includes(usuario.alias)) {
+            if(idCoartada === null){
+                setTestigos([...testigos, usuario.alias]);
+                mostrarMensaje(`${usuario.alias} ahora apoya tu Alibi.`, "exito");
+                return;
+            }
+
+            const coartadas = obtenerCoartadas();
+            const nuevaCoartdas = unirseComoTestigo(
+                coartadas,
+                idCoartada,
+                usuario.alias
+            );
+
+            guardarCoartadas(nuevaCoartdas);
+            setTestigos([...testigos, usuario.alias]);
+            mostrarMensaje(`${usuario.alias} ahora apoya a tu Alibi`, "exito");
+        }
         else {
-            const usuario = usuarios.find((usuario) => usuario.id === idUsuario);
             mostrarMensaje(`${usuario.alias} ya es testigo de esta coartada.`, "error");
         }
     }
@@ -94,8 +124,30 @@ function CreateAlibi() {
         }, 3000);
     }
 
-    /* ✧Estilo ✧*/
-    
+    function desertarTestigo(alias){
+        if(idCoartada === null){
+            setTestigos(testigos.filter((testigo) => testigo !== alias));
+            return;
+        }
+
+        const coartadas = obtenerCoartadas();
+        const nuevasCoartadas = desertarDeLaCadena(
+            coartadas,
+            idCoartada,
+            alias
+        );
+
+        guardarCoartadas(nuevasCoartadas);
+        setTestigos(testigos.filter((testigo) => testigo !== alias));
+        mostrarMensaje(`${alias} abadonó la Alibi Chain`, "error");
+    }
+
+    /*✧Estilo ✧*/
+    const estilosMensaje = {
+    error: "bg-red-100 text-red-700 border border-red-300",
+    exito: "bg-green-100 text-green-700 border border-green-300",
+    revision: "bg-yellow-100 text-yellow-700 border border-yellow-300"
+    };
     return ( 
     <main className="min-h-screen bg-[#ac97ff] px-5 py-10 font-sans text-[#21175c]"> 
     <div className="mx-auto max-w-3xl rounded-2xl bg-[#f5f2ff] p-6 shadow-xl sm:p-9"> 
@@ -133,33 +185,32 @@ function CreateAlibi() {
         
         {/* TESTIGOS */} 
         <h2 className="mb-3 mt-8 text-xl font-semibold text-[#37288a]"> Testigos </h2> 
-        <div className="flex flex-wrap gap-2"> {usuarios.map((usuario) => ( <button type="button" key={usuario.id} onClick={() => agregarTestigo(usuario.id) } 
-            className="rounded-lg border-2 border-[#8e7bdc] bg-white px-4 py-2 font-semibold text-[#37288a] 
-            transition hover:-translate-y-0.5 hover:bg-[#ece8ff] active:translate-y-0" > Apoyar como {usuario.alias} </button> ))} </div> 
-                 
+        <div className="flex flex-wrap gap-2"> {testigos.map((alias) => ( <li key={alias} className="flex items-center justify-between"> <span>{alias}</span> 
+        <button type="button" onClick={() => desertarTestigo(alias)} className="ml-3 rounded-lg bg-red-100 px-3 
+        py-1 text-sm font-semibold text-red-700 hover:bg-red-200">Desertar</button></li>))} </div> 
+        
         {/* ALIBI CHAIN */}
         <h3 className="mb-2 mt-8 text-lg font-semibold text-[#5c4bb7]"> Alibi Chain </h3> <p className="rounded-lg bg-[#e8e2ff] p-3"> 
             {testigos.length === 0 ? "Todavía no hay testigos que apoyen tu Alibi." : `Esta Alibi Chain tiene ${testigos.length} miembro(s).` } </p>
                     
         {/* TESTIGOS ACTUALES */} 
-        {testigos.length > 0 && ( <div className="mt-3 rounded-lg bg-white p-4 shadow-sm">
+        {testigos.length > 0 && ( <div className="mt-3 rounded-lg bg-white p-4 shadow-sm"> 
         <p className="mb-2 font-semibold text-[#37288a]"> Testigos actuales: </p> 
-        <ul className="list-disc pl-5 text-[#21175c]"> {testigos.map((id) => { const usuario = usuarios.find( 
-            (usuario) => usuario.id === id ); return ( <li key={id}> {usuario.alias} </li> ); })} </ul> </div> )} 
+        <ul className="list-disc pl-5 text-[#21175c]"> {testigos.map((alias) =>( <li key={alias}>{alias}</li> ))} </ul> </div> )} 
                             
         {/* BOTONES */} 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row"> 
-        <button type="button" onClick={() => crearAlibi("Draft")}
-        className="rounded-lg bg-[#0d0074] px-[18px] py-[11px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#1600a0] active:translate-y-0" >
+        <button type="button" onClick={() => crearAlibi("Draft")} 
+        className="rounded-lg bg-[#0d0074] px-[18px] py-[11px] font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#1600a0] active:translate-y-0" > 
         Guardar borrador </button> <button type="button" onClick={() => crearAlibi("Submitted")} className="rounded-lg bg-[#0d0074] px-[18px] py-[11px] font-bold 
         text-white transition hover:-translate-y-0.5 hover:bg-[#1600a0] active:translate-y-0" > Enviar Alibi </button> </div> 
                                       
         {/* MENSAJES */} 
-        {mensaje.texto && ( <div className={`mt-5 rounded-lg p-3 font-bold ${ estilosMensaje[mensaje.tipo] }`} >
+        {mensaje.texto && ( <div className={`mt-5 rounded-lg p-3 font-bold ${ estilosMensaje[mensaje.tipo] }`} > 
              {mensaje.texto} </div> )} 
         {/* ESTADO */} 
-        {estado && ( <div className="mt-5 rounded-lg bg-white p-3 shadow-sm"> Estado actual: {" "}
+        {estado && ( <div className="mt-5 rounded-lg bg-white p-3 shadow-sm"> Estado actual: {" "} 
         <strong className="text-[#0d0074]"> {estado} </strong> </div> )} </div> </main> ); 
-        }
+}
     
-    export default CreateAlibi;
+export default CreateAlibi;
