@@ -28,7 +28,7 @@
   - *Most Wanted*: Usuarios con mayor número de coartadas generadas.
 
 ---
-##📎 Una pequeña nota: 
+### 📎 Una pequeña nota: 
 El proyecto fue hecho por ramas y para ver toda su funcionalidad hay que revisar las ramas. ¡Echale un ojo! Cada una tiene partes importantes para AlibiForge. Muhcas gracias :)
 
 ## 📁 Estructura del Proyecto
